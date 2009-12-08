@@ -121,12 +121,17 @@ class Less::More
       if source.extname == ".css"
         css = File.read(source)
       else
-        engine = File.open(source) {|f| Less::Engine.new(f) }
-        css = engine.to_css
-        css.delete!("\n") if self.compression?
-        css = (HEADER % [source.to_s]) << css if self.header?
+        css = generate_css(source)
       end
 
+      css
+    end
+    
+    def generate_css(source)
+      engine = File.open(source) {|f| Less::Engine.new(f) }
+      css = engine.to_css
+      css.delete!("\n") if self.compression?
+      css = (HEADER % [source.to_s]) << css if self.header?
       css
     end
     
